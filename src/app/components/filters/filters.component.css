@@ -1,0 +1,23 @@
+section {
+  display: table;
+}
+
+button[mat-fab].mat-fab {
+  &.limpar {
+    background-color: #e0e0e0; /* Cinza claro */
+    color: #000; /* Preto */
+  }
+
+  &.limpar:hover {
+    background-color: #bdbdbd; /* Cinza médio */
+  }
+
+  &.filtrar {
+    background-color: #1976d2; /* Azul */
+    color: #fff; /* Branco */
+  }
+
+  &.filtrar:hover {
+    background-color: #1565c0; /* Azul escuro */
+  }
+}

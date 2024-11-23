@@ -1,30 +1,60 @@
-<section class="grid grid-cols-1 pr-4">
-  <mat-form-field class="example-full-width">
+<section class="grid grid-cols-1 pr-4 w-1/6">
+  <mat-form-field>
     <mat-label>Aluno</mat-label>
-    <input matInput placeholder="Joãozinho" />
+    <input matInput placeholder="Joãozinho" [(ngModel)]="aluno" />
   </mat-form-field>
   <mat-form-field>
     <mat-label>Ano</mat-label>
-    <mat-select>
-      @for (curso of cursos; track curso) {
-      <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
-      }
-    </mat-select>
+    <input
+      matInput
+      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+      type="number"
+      maxlength="4"
+      placeholder="2014"
+      [value]="ano"
+      [(ngModel)]="ano"
+      (keyup)="onAnoChange()"
+    />
   </mat-form-field>
+  @if (showSemestre) {
   <mat-form-field>
     <mat-label>Semestre</mat-label>
-    <mat-select>
-      @for (curso of cursos; track curso) {
-      <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
+    <mat-select (selectionChange)="onSemestreChange($event)">
+      @for (semestre of semestres; track semestre) {
+      <mat-option [value]="semestre.id">{{ semestre.nome }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
+  }
   <mat-form-field>
     <mat-label>Curso</mat-label>
-    <mat-select>
+    <mat-select (selectionChange)="onCursoChange($event)">
       @for (curso of cursos; track curso) {
       <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
+  <mat-divider></mat-divider>
+  <div class="flex justify-between mt-4">
+    <button
+      mat-fab
+      extended
+      disabledInteractive="true"
+      color="basic"
+      matTooltip="Limpar filtros"
+      (click)="limparFiltros()"
+    >
+      Limpar
+    </button>
+    <button
+      mat-fab
+      extended
+      color="primary"
+      disabledInteractive="true"
+      matTooltip="Filtrar Alunos"
+      (click)="filtrar()"
+    >
+      Filtrar
+    </button>
+  </div>
 </section>
