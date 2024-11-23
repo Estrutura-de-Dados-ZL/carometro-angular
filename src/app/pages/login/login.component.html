@@ -1,2 +1,37 @@
 <app-navbar></app-navbar>
-<p>login works!</p>
+<p>Entrar</p>
+<form class="grid grid-cols-1" >
+    <mat-form-field class="example-full-width" appearence="outline">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"
+             placeholder="Ex. pat@example.com">
+      @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+        <mat-error>Por favor, Insira um Email válido</mat-error>
+      }
+      @if (emailFormControl.hasError('required')) {
+        <mat-error>Insira um Email</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="example-full-width" appearence="outline">
+        <mat-label>Insira sua senha</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="clickEvent($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()"
+        >
+          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    
+      <button mat-fab extended [disabled]="isDisabled" disabledInteractive="true" matTooltip="Insira os dados para Login">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+  </form>
+  
+ 
+  
+  
