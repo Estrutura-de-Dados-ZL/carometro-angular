@@ -1,0 +1,30 @@
+<section class="grid grid-cols-1 pr-4">
+  <mat-form-field class="example-full-width">
+    <mat-label>Aluno</mat-label>
+    <input matInput placeholder="Joãozinho" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Ano</mat-label>
+    <mat-select>
+      @for (curso of cursos; track curso) {
+      <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Semestre</mat-label>
+    <mat-select>
+      @for (curso of cursos; track curso) {
+      <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Curso</mat-label>
+    <mat-select>
+      @for (curso of cursos; track curso) {
+      <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</section>

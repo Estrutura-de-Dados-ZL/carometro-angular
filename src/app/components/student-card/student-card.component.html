@@ -1,0 +1,14 @@
+<div class="flex p-4 bg-white rounded-md drop-shadow-md mb-2 flex-col">
+  <!-- Foto do Produto (à esquerda) -->
+  <div class="mx-auto">
+    <img [src]="student.foto" [alt]="student.nome" class="object-cover h-48" />
+  </div>
+
+  <!-- Informações do Produto (à direita) -->
+  <div>
+    <div>
+      <!-- Nome do Produto -->
+      <h2 class="text-center text-xl font-bold mb-2">{{ student.nome }}</h2>
+    </div>
+  </div>
+</div>
