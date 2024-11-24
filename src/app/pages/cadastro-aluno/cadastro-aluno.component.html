@@ -1,0 +1,85 @@
+<app-navbar></app-navbar>
+  <div class="mb-2 mt-2 ms-5">
+      <h1 class="display-6">Cadastro de Aluno</h1>
+  </div>
+    
+  <hr />
+  
+  <div class="container-fluid ms-5 mt-4">
+    <form [formGroup]="cadastroAlunoForm" (ngSubmit)="cadastrarAluno()">
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="foto" class="form-label">Foto</label>
+            <input type="text" class="form-control" id="foto" formControlName="foto" placeholder="URL da foto" />
+          </div>
+        </div>
+  
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="link" class="form-label">Link</label>
+            <input type="text" class="form-control" id="link" formControlName="link" placeholder="Link do perfil" />
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-12">
+          <div class="mb-3">
+            <label for="comentario" class="form-label">Comentário</label>
+            <textarea class="form-control" id="comentario" formControlName="comentario" placeholder="Comentário sobre o aluno"></textarea>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="campoLivre" class="form-label">Campo Livre</label>
+            <input type="text" class="form-control" id="campoLivre" formControlName="campoLivre" placeholder="Campo livre para observações" />
+          </div>
+        </div>
+  
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="permissaoDados" class="form-label">Permissão de Dados</label>
+            <input type="checkbox" class="form-check-input" id="permissaoDados" formControlName="permissaoDados" />
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="pendente" class="form-label">Pendência</label>
+            <input type="checkbox" class="form-check-input" id="pendente" formControlName="pendente" />
+          </div>
+        </div>
+  
+        <div class="col-6">
+          <div class="mb-3">
+            <label for="turma" class="form-label">Turma</label>
+            <input type="text" class="form-control" id="turma" formControlName="turma" placeholder="Turma do aluno" />
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-12">
+          <div class="mb-3">
+            <label for="experiencias" class="form-label">Experiências</label>
+            <input type="text" class="form-control" id="experiencias" formControlName="experiencias" placeholder="Experiências do aluno" />
+          </div>
+        </div>
+      </div>
+  
+      <div class="row mt-4">
+        <div class="col-2">
+          <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+        </div>
+        <div class="col-2">
+          <button type="submit" class="btn btn-dark" [disabled]="!cadastroAlunoForm.valid" (click)="cadastrarAluno()">Cadastrar</button>
+        </div>
+      </div>
+    </form>
+  </div>

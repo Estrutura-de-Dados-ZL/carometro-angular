@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -12,16 +12,23 @@ export class AlunoService {
 
   constructor(private http: HttpClient) {}
 
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
+
   listarAlunos(filtros?: { [key: string]: any }): Observable<IAluno[]> {
     let url = `${this.apiUrl}/buscarTodos`;
-  
+
     if (filtros) {
       const queryString = Object.entries(filtros)
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
         .join('&');
       url = `${url}?${queryString}`;
     }
-  
+
     return this.http.get<IAluno[]>(url).pipe(
       tap(() => console.log('Alunos carregados com sucesso!')),
       catchError((error) => {
@@ -45,7 +52,9 @@ export class AlunoService {
   }
 
   criarAluno(aluno: IAluno): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}`, aluno).pipe(
+    return this.http.post<string>(`${this.apiUrl}`, aluno, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
       tap(() => console.log('Aluno criado com sucesso!')),
       catchError((error) => {
         console.error('Erro ao criar aluno:', error);
@@ -55,7 +64,9 @@ export class AlunoService {
   }
 
   atualizarAluno(aluno: IAluno): Observable<any> {
-    return this.http.put(`${this.apiUrl}`, aluno).pipe(
+    return this.http.put(`${this.apiUrl}`, aluno, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
       tap(() => console.log('Aluno atualizado com sucesso!')),
       catchError((error) => {
         console.error('Erro ao atualizar aluno:', error);
@@ -65,7 +76,9 @@ export class AlunoService {
   }
 
   deletarAluno(email: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${email}`).pipe(
+    return this.http.delete<string>(`${this.apiUrl}/${email}`, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
       tap(() => console.log('Aluno excluído com sucesso!')),
       catchError((error) => {
         console.error('Erro ao excluir aluno:', error);
