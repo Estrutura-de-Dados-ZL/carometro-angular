@@ -19,7 +19,10 @@
   @if (showSemestre) {
   <mat-form-field>
     <mat-label>Semestre</mat-label>
-    <mat-select (selectionChange)="onSemestreChange($event)">
+    <mat-select
+      (selectionChange)="onSemestreChange($event)"
+      [value]="selectedSemestre"
+    >
       @for (semestre of semestres; track semestre) {
       <mat-option [value]="semestre.id">{{ semestre.nome }}</mat-option>
       }
@@ -28,7 +31,10 @@
   }
   <mat-form-field>
     <mat-label>Curso</mat-label>
-    <mat-select (selectionChange)="onCursoChange($event)">
+    <mat-select
+      (selectionChange)="onCursoChange($event)"
+      [value]="selectedCurso"
+    >
       @for (curso of cursos; track curso) {
       <mat-option [value]="curso.value">{{ curso.nome }}</mat-option>
       }

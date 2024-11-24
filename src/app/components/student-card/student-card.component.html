@@ -1,13 +1,21 @@
-<div class="flex p-4 bg-white rounded-md drop-shadow-md mb-2 flex-col">
-  <!-- Foto do Produto (à esquerda) -->
-  <div class="mx-auto">
-    <img [src]="student.foto" [alt]="student.nome" class="object-cover h-48" />
+<div
+  class="flex p-4 bg-white rounded-md drop-shadow-md mb-2 flex-col cursor-pointer"
+  (click)="goToStudentDetails(student.email)"
+>
+  <!-- Contêiner da Imagem com Altura Fixa -->
+  <div
+    class="w-full h-48 flex items-center justify-center overflow-hidden bg-gray-200 rounded-md"
+  >
+    <img
+      [src]="student.foto"
+      [alt]="student.nome"
+      class="object-cover w-full h-full"
+    />
   </div>
 
-  <!-- Informações do Produto (à direita) -->
+  <!-- Conteúdo do Card -->
   <div>
     <div>
-      <!-- Nome do Produto -->
       <h2 class="text-center text-xl font-bold mb-2">{{ student.nome }}</h2>
     </div>
   </div>

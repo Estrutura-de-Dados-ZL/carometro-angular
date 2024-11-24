@@ -22,7 +22,7 @@ const cursosMock = [
   },
 ];
 
-interface IFilter {
+export interface IFilter {
   ano: number;
   semestre: number;
   curso: number;
@@ -50,7 +50,8 @@ interface ISemestre {
   styleUrl: './filters.component.css',
 })
 export class FiltersComponent {
-  @Output() filtroEnviado = new EventEmitter<IFilter>();
+  @Output() enviarFiltro = new EventEmitter<IFilter>();
+  @Output() limparFiltro = new EventEmitter<null>();
 
   cursos = cursosMock;
   selectedCurso: number = 0;
@@ -90,12 +91,14 @@ export class FiltersComponent {
   }
 
   filtrar() {
-    console.log(
-      this.ano,
-      this.aluno,
-      this.selectedSemestre,
-      this.selectedCurso
-    );
+    const filtro: IFilter = {
+      ano: this.ano || 0,
+      aluno: this.aluno,
+      semestre: this.selectedSemestre,
+      curso: this.selectedCurso,
+    };
+
+    this.enviarFiltro.emit(filtro);
   }
 
   limparFiltros() {
@@ -104,5 +107,7 @@ export class FiltersComponent {
     this.selectedSemestre = 0;
     this.selectedCurso = 0;
     this.showSemestre = false;
+
+    this.limparFiltro.emit();
   }
 }

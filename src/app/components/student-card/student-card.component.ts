@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 type studentMock = {
   nome: string;
   foto: string;
+  email: string;
 };
 
 @Component({
@@ -14,4 +16,11 @@ type studentMock = {
 })
 export class StudentCardComponent {
   @Input() student!: studentMock;
+
+  constructor(private router: Router) {}
+
+  goToStudentDetails(studentEmail: string) {
+    const data = { studentEmail };
+    this.router.navigate(['/alunoDetalhes'], { state: data });
+  }
 }

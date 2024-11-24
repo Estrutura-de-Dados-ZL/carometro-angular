@@ -1,5 +1,35 @@
 <!-- Navbar para desktop -->
-<header class="bg-gray-800">
+<header class="bg-gray-800 sm:block hidden">
+  <nav
+    class="flex items-center justify-between p-4 text-white max-w-screen-xl mx-auto"
+  >
+    <div class="flex items-center justify-between w-full">
+      <div class="h-10 mr-2 pt-1 w-2/12 text-center">
+        <span class="whitespace-nowrap text-3xl font-bold font-serif"
+          >CAROMETRO</span
+        >
+      </div>
+      @if (notHomePage) {
+      <div class="h-10 mr-2 pt-1 w-1/12">
+        <span class="whitespace-nowrap text-2xl font-bold font-serif">{{
+          nomePagina
+        }}</span>
+      </div>
+      }
+      <div class="ml-4 flex justify-between w-1/12">
+        <a routerLink="" routerLinkActive="active" title="Home">
+          <i class="pi pi-home cursor-pointer text-xl"></i>
+        </a>
+        <a routerLink="/login" routerLinkActive="active" title="Login">
+          <i class="pi pi-user cursor-pointer text-xl"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Navbar para dispositivos moveis -->
+<header class="bg-gray-800 sm:hidden">
   <nav
     class="flex items-center justify-between p-4 text-white max-w-screen-xl mx-auto"
   >
