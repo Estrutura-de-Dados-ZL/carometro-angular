@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule  } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AlunoService } from '../../services/aluno.service';
 import { IAluno } from '../../interfaces/aluno';
 import { ITurma } from '../../interfaces/turma';
@@ -13,10 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
   templateUrl: './cadastro-aluno.component.html',
   styleUrls: ['./cadastro-aluno.component.css'],
   standalone: true,
-  imports: [
-    NavbarComponent,
-    ReactiveFormsModule
-  ],
+  imports: [NavbarComponent, ReactiveFormsModule, HttpClientModule],
 })
 export class CadastroAlunoComponent implements OnInit {
   cadastroAlunoForm = new FormGroup({
@@ -27,7 +29,7 @@ export class CadastroAlunoComponent implements OnInit {
     permissaoDados: new FormControl(false, Validators.requiredTrue),
     pendente: new FormControl(false, Validators.required),
     turma: new FormControl<ITurma | null>(null, Validators.required),
-    experiencias: new FormControl('', Validators.required)
+    experiencias: new FormControl('', Validators.required),
   });
 
   ngOnInit(): void {}
@@ -35,7 +37,7 @@ export class CadastroAlunoComponent implements OnInit {
   constructor(
     private alunoService: AlunoService,
     private router: Router,
-    private httpClient: HttpClientModule,
+    private httpClient: HttpClientModule
   ) {}
 
   cadastrarAluno(): void {
@@ -45,10 +47,13 @@ export class CadastroAlunoComponent implements OnInit {
         link: this.cadastroAlunoForm.get('link')?.value || '',
         comentario: this.cadastroAlunoForm.get('comentario')?.value || '',
         campoLivre: this.cadastroAlunoForm.get('campoLivre')?.value || '',
-        permissaoDados: this.cadastroAlunoForm.get('permissaoDados')?.value || false,
+        permissaoDados:
+          this.cadastroAlunoForm.get('permissaoDados')?.value || false,
         pendente: this.cadastroAlunoForm.get('pendente')?.value || false,
         turma: this.cadastroAlunoForm.get('turma')?.value as ITurma,
-        experiencias: JSON.parse(this.cadastroAlunoForm.get('experiencias')?.value || '[]')
+        experiencias: JSON.parse(
+          this.cadastroAlunoForm.get('experiencias')?.value || '[]'
+        ),
       };
 
       this.alunoService.criarAluno(aluno).subscribe(
@@ -57,7 +62,7 @@ export class CadastroAlunoComponent implements OnInit {
             icon: 'success',
             title: 'Aluno cadastrado com sucesso!',
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
           this.router.navigate(['/alunos']);
         },
