@@ -1,0 +1,111 @@
+<app-navbar [notHomePage]="true" nomePagina="Cursos"></app-navbar>
+<section class="max-w-screen-xl mx-auto p-4">
+  <app-table
+    [colunas]="colunas"
+    [data]="cursos"
+    (dataAdd)="abrirModalCadastrar()"
+    (dataEdit)="abrirModalEditar($event)"
+    (dataDelete)="abrirModalDeletar($event)"
+    (pesquisaEnviada)="receberPesquisa($event)"
+    [isLoadingSearch]="isLoadingSearch"
+  ></app-table>
+</section>
+
+<!-- Modal Edição -->
+<p-dialog
+  *ngIf="cursoSelecionado"
+  header="Editar Curso"
+  [(visible)]="showModalEditar"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div>
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="nome">
+          Nome:
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="nome"
+          type="text"
+          placeholder="Analise e Desenvolvimento de Sistemas"
+          [(ngModel)]="cursoSelecionado.nome"
+          name="nome"
+        />
+      </div>
+      <div class="flex items-end justify-end">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          (click)="editarCurso()"
+        >
+          Editar
+        </button>
+      </div>
+    </form>
+  </div>
+</p-dialog>
+
+<!-- Modal Cadastro -->
+<p-dialog
+  header="Cadastrar Curso"
+  [(visible)]="showModalCadastrar"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div>
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="nome">
+          Nome:
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="nome"
+          type="text"
+          placeholder="Analise e Desenvolvimento de Sistemas"
+          [(ngModel)]="cursoCadastro.nome"
+          name="nome"
+        />
+      </div>
+      <div class="flex items-end justify-end">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          (click)="cadastrarCurso()"
+        >
+          Cadastrar
+        </button>
+      </div>
+    </form>
+  </div>
+</p-dialog>
+
+<!-- Modal Deletar -->
+<p-dialog
+  *ngIf="cursoSelecionado"
+  header="Deletar Curso"
+  [(visible)]="showModalDeletar"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div>
+    <p>Tem certeza que deseja deletar o curso {{ cursoSelecionado.nome }}?</p>
+    <div class="flex items-end justify-end">
+      <button
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        type="button"
+        (click)="deletarCurso()"
+      >
+        Deletar
+      </button>
+    </div>
+  </div>
+</p-dialog>

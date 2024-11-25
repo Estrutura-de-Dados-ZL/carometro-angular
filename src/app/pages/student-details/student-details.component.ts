@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 export interface Aluno {
   nome: string;
+  email: string;
   foto: string;
   link: string;
   comentario: string;
@@ -31,6 +32,7 @@ export class StudentDetailsComponent {
   aluno: Aluno = {
     nome: 'João Silva',
     foto: 'https://i.pinimg.com/236x/19/bd/eb/19bdeb93ad73ce5ead4800d254c51008.jpg', // Imagem de exemplo
+    email: 'test@test.com',
     link: 'https://www.linkedin.com/in/joao-silva',
     comentario: 'Aluno dedicado e com grande potencial em tecnologia.',
     campoLivre:

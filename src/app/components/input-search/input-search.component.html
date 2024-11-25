@@ -1,0 +1,23 @@
+<div class="p-input-icon-right" *ngIf="!isCrud">
+  <i [ngClass]="isLoadingSearch ? 'pi pi-spin pi-spinner' : 'pi pi-search'"></i>
+  <input
+    type="text"
+    p-InputText
+    [(ngModel)]="inputPesquisa"
+    (input)="onSearch()"
+    placeholder="Pesquisar..."
+    class="bg-gray-700 p-2 rounded-full text-white"
+  />
+</div>
+
+<div class="p-input-icon-right" *ngIf="isCrud">
+  <i [ngClass]="isLoadingSearch ? 'pi pi-spin pi-spinner' : 'pi pi-search'"></i>
+  <input
+    type="text"
+    p-InputText
+    [(ngModel)]="inputPesquisa"
+    (input)="onSearch()"
+    placeholder="Pesquisar..."
+    class="p-2 rounded-md"
+  />
+</div>

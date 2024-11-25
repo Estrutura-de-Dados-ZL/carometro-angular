@@ -29,7 +29,7 @@ export interface IFilter {
   aluno: string;
 }
 
-interface ISemestre {
+export interface ISemestre {
   nome: string;
   id: number;
 }

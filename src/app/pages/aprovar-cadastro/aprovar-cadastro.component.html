@@ -1,0 +1,98 @@
+<app-navbar [notHomePage]="true" nomePagina="Cadastros Pendentes"></app-navbar>
+<section class="max-w-screen-xl mx-auto p-4" *ngIf="alunos.length">
+  <app-table
+    [colunas]="colunas"
+    [data]="alunos"
+    [isHistorico]="true"
+    (dataView)="abrirModal($event)"
+  ></app-table>
+</section>
+<section class="max-w-screen-xl mx-auto p-4" *ngIf="!alunos.length">
+  <div class="w-full text-center">
+    <h1 class="text-2xl font-bold">Nenhum Aluno encontrada!</h1>
+  </div>
+</section>
+<!-- Modal Detalhes Aluno -->
+<p-dialog
+  header="Detalhes do(a) Aluno(a)"
+  [(visible)]="displayModal"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '50vw' }"
+>
+  <div class="p-grid">
+    <div class="p-col-12 mb-4">
+      <div class="p-grid">
+        <div class="p-col-12 p-md-6">
+          <div class="p-grid">
+            <div class="p-col-12 mb-4">
+              <img
+                [src]="alunoSelecionado?.foto"
+                alt="{{ alunoSelecionado?.nome }}"
+                class="object-cover rounded-lg w-40 h-40"
+              />
+            </div>
+            <div class="p-col-12">
+              <p>Nome: {{ alunoSelecionado?.nome }}</p>
+            </div>
+            <div class="p-col-12">
+              <p>Link: {{ alunoSelecionado?.link }}</p>
+            </div>
+            <div class="p-col-12">
+              <p>Curso: {{ alunoSelecionado?.curso }}</p>
+            </div>
+            <div class="p-col-12">
+              <p>Comentário: {{ alunoSelecionado?.comentario }}</p>
+            </div>
+            <div class="p-col-12">
+              <p>Campo Livre: {{ alunoSelecionado?.campoLivre }}</p>
+            </div>
+            <div class="p-col-12 mt-10">
+              <p><b>Experiências:</b></p>
+            </div>
+            @for (experiencia of alunoSelecionado?.experiencias; track
+            experiencia) {
+            <div class="p-col-12">
+              <p>Nome: {{ experiencia.nome }}</p>
+            </div>
+            <div class="p-col-12">
+              <p>Função: {{ experiencia.funcao }}</p>
+            </div>
+            <div class="p-col-12">
+              <p>
+                <strong>Início:</strong> {{ experiencia.inicio }} -
+                <strong>Fim:</strong> {{ experiencia.fim }}
+              </p>
+            </div>
+            } @if (alunoSelecionado?.experiencias &&
+            alunoSelecionado?.experiencias?.length === 0) {
+            <div>
+              <p>O aluno não possui experiências cadastradas.</p>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex w-full justify-center align-middle">
+      <div class="p-4">
+        <button
+          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          (click)="recusarCadastro()"
+        >
+          Recusar
+        </button>
+      </div>
+      <div class="p-4">
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          (click)="aceitarCadastro()"
+        >
+          Aceitar
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
