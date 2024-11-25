@@ -63,7 +63,7 @@
           id="ano"
           type="text"
           placeholder="Analise e Desenvolvimento de Sistemas"
-          [(ngModel)]="turmaSelecionada.ano"
+          [(ngModel)]="turmaSelecionada.turmaId.ano"
           name="ano"
         />
       </div>
@@ -90,7 +90,10 @@
   [resizable]="false"
 >
   <div>
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form
+      [formGroup]="turmaCadastro"
+      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+    >
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -100,10 +103,10 @@
         </label>
         <select
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-slate-100"
-          [formControl]="semestreSelecionado"
+          formControlName="semestre"
           name="semestre"
         >
-          <option *ngFor="let semestre of semestres" [ngValue]="semestre">
+          <option *ngFor="let semestre of semestres" [value]="semestre.id">
             {{ semestre.nome }}
           </option>
         </select>
@@ -114,10 +117,10 @@
         </label>
         <select
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-slate-100"
-          [formControl]="cursoSelecionado"
+          formControlName="cursoId"
           name="curso"
         >
-          <option *ngFor="let curso of cursos" [ngValue]="curso">
+          <option *ngFor="let curso of cursos" [value]="curso.id">
             {{ curso.nome }}
           </option>
         </select>
@@ -130,9 +133,8 @@
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="ano"
           type="text"
-          placeholder="Analise e Desenvolvimento de Sistemas"
-          [(ngModel)]="turmaCadastro.ano"
-          name="ano"
+          placeholder="Digite o ano"
+          formControlName="ano"
         />
       </div>
       <div class="flex items-end justify-end">
