@@ -1,5 +1,10 @@
 import { ICurso } from "./curso";
-import { ITurmaId } from "./turma-id";
+
+export interface ITurmaId {
+    cursoId: number;
+    ano: string;
+    semestre: string;
+}
 
 export interface ITurma {
     turmaId: ITurmaId;

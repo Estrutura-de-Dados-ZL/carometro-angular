@@ -1,41 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import Swal from 'sweetalert2';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { TableComponent } from '../../components/table/table.component';
+import { TurmaService } from '../../services/turma.service';
+import { CursoService } from '../../services/curso.service';
 import { ICurso } from '../../interfaces/curso';
-
-const TURMA_CADASTRO = { cursoId: 0, ano: '', semestre: '' };
-
-const turmasMock = [
-  {
-    cursoId: 1,
-    ano: '2024',
-    semestre: '1',
-  },
-  {
-    cursoId: 2,
-    ano: '2024',
-    semestre: '1',
-  },
-  {
-    cursoId: 3,
-    ano: '2024',
-    semestre: '2',
-  },
-];
-
-interface Turma {
-  cursoId: number;
-  ano: string;
-  semestre: string;
-}
-
-interface Semestre {
-  nome: string;
-  id: string;
-}
+import { ITurma, ITurmaId } from '../../interfaces/turma';
 
 @Component({
   selector: 'app-turma',
@@ -49,156 +22,155 @@ interface Semestre {
     ReactiveFormsModule,
   ],
   templateUrl: './turma.component.html',
-  styleUrl: './turma.component.css',
+  styleUrls: ['./turma.component.css'],
 })
 export class TurmaComponent implements OnInit {
   colunas = ['cursoId', 'ano', 'semestre'];
-
   showModalEditar = false;
   showModalDeletar = false;
   showModalCadastrar = false;
-  turmaCadastro = TURMA_CADASTRO;
-  turmaSelecionada!: Turma;
-  turmas: Turma[] = [];
+  turmaSelecionada!: ITurma;
+  turmas: ITurma[] = [];
+  cursos: ICurso[] = [];
   isLoadingSearch = false;
   termoPesquisa = '';
-  cursoSelecionado = new FormControl<ICurso | undefined>(undefined);
-  cursos = [
-    {
-      id: 1,
-      nome: 'ads',
-    },
-    {
-      id: 2,
-      nome: 'comex',
-    },
-    {
-      id: 3,
-      nome: 'polimero',
-    },
-    {
-      id: 4,
-      nome: 'gestao',
-    },
-  ];
   semestres = [
-    {
-      nome: '1º Semestre',
-      id: '1',
-    },
-    {
-      nome: '2º Semestre',
-      id: '2',
-    },
+    { nome: '1º Semestre', id: '1' },
+    { nome: '2º Semestre', id: '2' },
   ];
-  semestreSelecionado = new FormControl<Semestre | undefined>(undefined);
 
-  constructor() {}
+  semestreSelecionado = new FormControl('');
+  cursoSelecionado = new FormControl('');
+  turmaForm = new FormGroup({
+    ano: new FormControl(''),
+  });
+
+  turmaCadastro = new FormGroup({
+    ano: new FormControl(''),
+    semestre: new FormControl(''),
+    cursoId: new FormControl(''),
+  });
+
+  constructor(private turmaService: TurmaService, private cursoService: CursoService) {}
 
   ngOnInit(): void {
     this.carregarTurmas();
+    this.carregarCursos();
   }
 
-  abrirModalEditar(turma: Turma): void {
+  carregarTurmas(): void {
+    this.turmaService.listarTurmas().subscribe(
+      (turmas) => {
+        this.turmas = turmas;
+        this.isLoadingSearch = false;
+      },
+      () => {
+        this.isLoadingSearch = false;
+        Swal.fire('Erro', 'Falha ao carregar as turmas.', 'error');
+      }
+    );
+  }
+
+  carregarCursos(): void {
+    this.cursoService.listarCursos().subscribe(
+      (cursos) => {
+        this.cursos = cursos;
+      },
+      () => Swal.fire('Erro', 'Falha ao carregar os cursos.', 'error')
+    );
+  }
+
+  abrirModalEditar(turma: ITurma): void {
     this.turmaSelecionada = { ...turma };
-    this.setarValorInicialForm();
+    this.turmaForm.patchValue({ ano: turma.turmaId.ano });
+    this.semestreSelecionado.setValue(this.semestres.find((s) => s.id === turma.turmaId.semestre)?.id || null);
+    this.cursoSelecionado.setValue(this.cursos.find((c) => c.id === turma.turmaId.cursoId)?.id?.toString() || null);
     this.showModalEditar = true;
   }
 
   abrirModalCadastrar(): void {
+    this.turmaCadastro.reset()
     this.showModalCadastrar = true;
   }
 
-  abrirModalDeletar(turma: Turma): void {
+  abrirModalDeletar(turma: ITurma): void {
     this.turmaSelecionada = turma;
     this.showModalDeletar = true;
   }
 
   cadastrarTurma(): void {
-    if (
-      this.turmaCadastro.cursoId &&
-      this.turmaCadastro.ano &&
-      this.turmaCadastro.semestre
-    ) {
-      // this.turmaService.create(this.turmaCadastro).subscribe(() => {
-      // 	this.carregarTurmas();
-      // });
-      this.turmaCadastro = TURMA_CADASTRO;
-      this.showModalCadastrar = false;
-    }
+    const novaTurma: ITurma = {
+      turmaId: {
+        cursoId: Number(this.turmaCadastro.get('cursoId')?.value) || 0,
+        ano: this.turmaCadastro.get('ano')?.value || '',
+        semestre: this.turmaCadastro.get('semestre')?.value || '',
+      },
+      curso: this.cursos.find(
+        (curso) => curso.id === Number(this.turmaCadastro.get('cursoId')?.value)
+      )!,
+    };
+
+    this.turmaService.criarTurma(novaTurma).subscribe(
+      () => {
+        Swal.fire('Sucesso', 'Turma cadastrada com sucesso!', 'success');
+        this.carregarTurmas();
+        this.showModalCadastrar = false;
+      },
+      () => Swal.fire('Erro', 'Não foi possível cadastrar a turma.', 'error')
+    );
   }
 
   editarTurma(): void {
-    if (this.cursoSelecionado.value && this.semestreSelecionado.value) {
-      this.turmaSelecionada.cursoId = this.cursoSelecionado.value.id;
-      this.turmaSelecionada.semestre = this.semestreSelecionado.value.nome;
-      console.log(this.turmaSelecionada);
-      // this.turmaService.update(this.turmaSelecionada).subscribe(() => {
-      //   this.carregarTurmas();
-      //   this.showModalEditar = false;
-      // });
-    }
+    const turmaAtualizada: ITurma = {
+      ...this.turmaSelecionada,
+      turmaId: {
+        ...this.turmaSelecionada.turmaId,
+        ano: this.turmaForm.get('ano')?.value || '',
+        semestre: this.semestreSelecionado.value || '',
+        cursoId: Number(this.cursoSelecionado.value) || 0,
+      },
+      curso: this.cursos.find(curso => curso.id === Number(this.cursoSelecionado.value))!,
+    };
+
+    this.turmaService.atualizarTurma(turmaAtualizada).subscribe(
+      () => {
+        Swal.fire('Sucesso', 'Turma atualizada com sucesso!', 'success');
+        this.carregarTurmas();
+        this.showModalEditar = false;
+      },
+      () => Swal.fire('Erro', 'Não foi possível atualizar a turma.', 'error')
+    );
   }
 
   deletarTurma(): void {
-    // this.turmaService.delete(this.turmaSelecionada.id).subscribe(() => {
-    // 	this.carregarTurmas();
-    // 	this.showModalDeletar = false;
-    // });
+    const turmaId: ITurmaId = this.turmaSelecionada.turmaId;
+
+    this.turmaService.deletarTurma(turmaId).subscribe(
+      () => {
+        Swal.fire('Sucesso', 'Turma deletada com sucesso!', 'success');
+        this.carregarTurmas();
+        this.showModalDeletar = false;
+      },
+      () => Swal.fire('Erro', 'Não foi possível deletar a turma.', 'error')
+    );
   }
 
-  receberPesquisa(termoPesquisa: string) {
+  receberPesquisa(termoPesquisa: string): void {
     this.isLoadingSearch = true;
-    if (termoPesquisa === '') {
-      this.termoPesquisa = 'colevati';
-    } else {
-      this.termoPesquisa = termoPesquisa;
-    }
+    this.termoPesquisa = termoPesquisa.trim();
 
-    this.filtrarTurmas();
-  }
-
-  filtrarTurmas(): void {
-    if (this.termoPesquisa === 'colevati') {
+    if (!this.termoPesquisa) {
       this.carregarTurmas();
       return;
     }
 
-    // this.turmaService.getByNome(this.termoPesquisa).subscribe(clientes => {
-    // 	if (clientes.length > 0) {
-    // 		this.turmas = clientes;
-    // 	}
-
-    // 	this.isLoadingSearch = false;
-    // });
-  }
-
-  private setarValorInicialForm(): void {
-    // TODO setar valores iniciais dos selects
-    this.cursoSelecionado.setValue(
-      this.buscarCurso(this.turmaSelecionada.cursoId)
+    this.turmas = this.turmas.filter((turma) =>
+      Object.values(turma.turmaId)
+        .concat(turma.curso.nome)
+        .some((valor) =>
+          valor.toString().toLowerCase().includes(this.termoPesquisa.toLowerCase())
+        )
     );
-
-    this.semestreSelecionado.setValue(
-      this.buscarSemestre(this.turmaSelecionada.semestre)
-    );
-  }
-
-  private buscarCurso(cursoId: number): ICurso | undefined {
-    return this.cursos.find((c) => c.id === cursoId);
-  }
-
-  private buscarSemestre(semestreId: string): Semestre | undefined {
-    return this.semestres.find((s) => s.id === semestreId);
-  }
-
-  private carregarTurmas(): void {
-    this.turmas = turmasMock;
-    // this.turmaService.getAll().subscribe(turmas => {
-    // 	if (turmas.length > 0) {
-    // 		this.turmas = turmas;
-    // 	}
-    // 	this.isLoadingSearch = false;
-    // });
+    this.isLoadingSearch = false;
   }
 }
