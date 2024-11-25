@@ -1,67 +1,76 @@
-import { Component } from '@angular/core';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-export interface Aluno {
-  nome: string;
-  email: string;
-  foto: string;
-  link: string;
-  comentario: string;
-  campoLivre: string;
-  curso: string;
-  experiencias: ExperienciaAluno[];
-}
-
-export interface ExperienciaAluno {
-  nome: string;
-  funcao: string;
-  inicio: string;
-  fim: string;
-}
+import { IAlunoDetails } from '../../interfaces/aluno-details';
+import { AlunoService } from '../../services/aluno.service';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
+import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-student-details',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [CommonModule, NavbarComponent],
   templateUrl: './student-details.component.html',
-  styleUrl: './student-details.component.css',
+  styleUrls: ['./student-details.component.css'],
 })
-export class StudentDetailsComponent {
+export class StudentDetailsComponent implements OnInit {
   studentEmail!: string;
-  aluno: Aluno = {
-    nome: 'João Silva',
-    foto: 'https://i.pinimg.com/236x/19/bd/eb/19bdeb93ad73ce5ead4800d254c51008.jpg', // Imagem de exemplo
-    email: 'test@test.com',
-    link: 'https://www.linkedin.com/in/joao-silva',
-    comentario: 'Aluno dedicado e com grande potencial em tecnologia.',
-    campoLivre:
-      'João tem se destacado em projetos de software e também como mentor em hackathons.',
-    curso: 'Ciência da Computação',
-    experiencias: [
-      {
-        nome: 'Estágio de Desenvolvimento Web',
-        funcao: 'Desenvolvedor Frontend',
-        inicio: 'Jan 2023',
-        fim: 'Dez 2023',
-      },
-      {
-        nome: 'Projeto de Pesquisa em Inteligência Artificial',
-        funcao: 'Pesquisador',
-        inicio: 'Mar 2022',
-        fim: 'Nov 2022',
-      },
-    ],
-  };
+  aluno!: IAlunoDetails | null;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private alunoService: AlunoService) {
     const navigation = this.router.getCurrentNavigation();
-    this.studentEmail = navigation?.extras.state?.['studentEmail'];
+    this.studentEmail = navigation?.extras.state?.['studentEmail'] ?? '';
 
     if (!this.studentEmail) {
-      this.router.navigate(['']);
+      this.router.navigate(['/']);
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadAluno();
+  }
+
+  loadAluno(): void {
+    this.alunoService.buscarAlunoPorEmail(this.studentEmail).subscribe(
+      (aluno) => {
+        this.aluno = aluno;
+      },
+      (error) => {
+        this.aluno = null;
+        this.showErrorAlert('Erro ao carregar os detalhes do aluno.');
+        console.error('Erro:', error);
+      }
+    );
+  }
+
+  showErrorAlert(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: message,
+      confirmButtonText: 'Ok',
+    });
+  }
+
+  showExperienciasAlert(): void {
+    Swal.fire({
+      title: 'Experiências do Aluno',
+      html: this.generateExperienciasHtml(),
+      icon: 'info',
+      confirmButtonText: 'Fechar',
+    });
+  }
+
+  private generateExperienciasHtml(): string {
+    if (!this.aluno || this.aluno.experiencias.length === 0) {
+      return '<p>O aluno não possui experiências cadastradas.</p>';
     }
 
-    console.log(this.studentEmail);
+    return this.aluno.experiencias
+      .map(
+        (exp) =>
+          `<p><strong>${exp.nome}</strong><br>Função: ${exp.funcao}<br>Período: ${exp.inicio} - ${exp.fim}</p>`
+      )
+      .join('<hr>');
   }
 }

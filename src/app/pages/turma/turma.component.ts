@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { TableComponent } from '../../components/table/table.component';
-import { Curso } from '../curso/curso.component';
+import { ICurso } from '../../interfaces/curso';
 
 const TURMA_CADASTRO = { cursoId: 0, ano: '', semestre: '' };
 
@@ -62,7 +62,7 @@ export class TurmaComponent implements OnInit {
   turmas: Turma[] = [];
   isLoadingSearch = false;
   termoPesquisa = '';
-  cursoSelecionado = new FormControl<Curso | undefined>(undefined);
+  cursoSelecionado = new FormControl<ICurso | undefined>(undefined);
   cursos = [
     {
       id: 1,
@@ -184,7 +184,7 @@ export class TurmaComponent implements OnInit {
     );
   }
 
-  private buscarCurso(cursoId: number): Curso | undefined {
+  private buscarCurso(cursoId: number): ICurso | undefined {
     return this.cursos.find((c) => c.id === cursoId);
   }
 

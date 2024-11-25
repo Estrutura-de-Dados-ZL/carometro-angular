@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { IAluno } from '../interfaces/aluno';
+import { IAlunoDetails } from '../interfaces/aluno-details';
 
 @Injectable({
   providedIn: 'root',
@@ -38,8 +39,8 @@ export class AlunoService {
     );
   }
 
-  buscarAlunoPorEmail(email: string): Observable<IAluno | null> {
-    return this.http.get<IAluno>(`${this.apiUrl}/${email}`).pipe(
+  buscarAlunoPorEmail(email: string): Observable<IAlunoDetails | null> {
+    return this.http.get<IAlunoDetails>(`${this.apiUrl}/${email}`).pipe(
       map((aluno) => aluno),
       catchError((error) => {
         if (error.status === 400 || error.status === 404) {

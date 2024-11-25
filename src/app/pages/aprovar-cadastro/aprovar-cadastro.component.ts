@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { TableComponent } from '../../components/table/table.component';
-import { Aluno } from '../student-details/student-details.component';
+import { StudentDetailsComponent } from '../student-details/student-details.component';
+import { IAlunoDetails } from '../../interfaces/aluno-details';
 
 @Component({
   selector: 'app-aprovar-cadastro',
@@ -21,10 +22,10 @@ import { Aluno } from '../student-details/student-details.component';
 })
 export class AprovarCadastroComponent implements OnInit {
   colunas = ['nome'];
-  alunoSelecionado: Aluno | undefined;
+  alunoSelecionado: IAlunoDetails | undefined;
   totalProdutosNoCarrinho = '0';
   displayModal = false;
-  alunos: Aluno[] = [
+  alunos: IAlunoDetails[] = [
     {
       nome: 'João Silva',
       email: 'test@test.com',
@@ -161,7 +162,7 @@ export class AprovarCadastroComponent implements OnInit {
     }
   }
 
-  abrirModal(aluno: Aluno): void {
+  abrirModal(aluno: IAlunoDetails): void {
     if (aluno.email && this.alunos.length > 0) {
       this.alunoSelecionado = this.alunos.find((c) => c.email === aluno.email);
       this.displayModal = true;

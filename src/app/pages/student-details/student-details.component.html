@@ -2,64 +2,52 @@
 <div
   class="student-detail-container p-4 max-w-screen-xl mx-auto h-[calc(100vh-4.5rem)] bg-white"
 >
-  <!-- Informações do Aluno -->
-  <div class="student-info mb-8">
-    <div class="student-name">
-      <h2 class="text-xl font-semibold">{{ aluno.nome }}</h2>
-    </div>
-
-    <div class="student-photo mb-4">
-      <img
-        [src]="aluno.foto"
-        alt="{{ aluno.nome }}"
-        class="object-cover rounded-lg w-40 h-40"
-      />
-    </div>
-
-    <div class="student-link mb-4">
-      <a [href]="aluno.link" target="_blank" class="text-blue-500 underline">
-        Visite o Link do Aluno
-      </a>
-    </div>
-
-    <div class="student-curso mb-4">
-      <p><strong>Curso:</strong> {{ aluno.curso }}</p>
-    </div>
-
-    <div class="student-comentario mb-4">
-      <p><strong>Comentário:</strong> {{ aluno.comentario }}</p>
-    </div>
-
-    <div class="student-campo-livre mb-4">
-      <p><strong>Campo Livre:</strong> {{ aluno.campoLivre }}</p>
-    </div>
-  </div>
-
-  <!-- Experiências do Aluno -->
-  <div class="student-experiencias mt-20">
-    <h2 class="text-xl font-bold mb-4">Experiências</h2>
-    <div>
-      @for (experiencia of aluno.experiencias; track experiencia) {
-      <div class="experience-card mb-8">
-        <div class="experience-name">
-          <h4 class="text-lg font-bold">{{ experiencia.nome }}</h4>
-        </div>
-        <div class="experience-funcao">
-          <p><strong>Função:</strong> {{ experiencia.funcao }}</p>
-        </div>
-        <div class="experience-period">
-          <p>
-            <strong>Início:</strong> {{ experiencia.inicio }} -
-            <strong>Fim:</strong> {{ experiencia.fim }}
-          </p>
-        </div>
+  <div *ngIf="aluno; else noAluno">
+    <!-- Informações do Aluno -->
+    <div class="student-info mb-8">
+      <div class="student-name">
+        <h2 class="text-xl font-semibold">{{ aluno.nome }}</h2>
       </div>
-      }
+
+      <div class="student-photo mb-4">
+        <img
+          [src]="aluno.foto"
+          alt="{{ aluno.nome }}"
+          class="object-cover rounded-lg w-40 h-40"
+        />
+      </div>
+
+      <div class="student-link mb-4">
+        <a [href]="aluno.link" target="_blank" class="text-blue-500 underline">
+          Visite o Link do Aluno
+        </a>
+      </div>
+
+      <div class="student-curso mb-4">
+        <p><strong>Curso:</strong> {{ aluno.curso }}</p>
+      </div>
+
+      <div class="student-comentario mb-4">
+        <p><strong>Comentário:</strong> {{ aluno.comentario }}</p>
+      </div>
+
+      <div class="student-campo-livre mb-4">
+        <p><strong>Campo Livre:</strong> {{ aluno.campoLivre }}</p>
+      </div>
     </div>
-    @if (aluno.experiencias.length === 0) {
-    <div>
-      <p>O aluno não possui experiências cadastradas.</p>
+
+    <!-- Botão para Mostrar Experiências -->
+    <div class="text-center">
+      <button
+        class="btn btn-primary"
+        (click)="showExperienciasAlert()"
+      >
+        Mostrar Experiências
+      </button>
     </div>
-    }
   </div>
+
+  <ng-template #noAluno>
+    <p>Detalhes do aluno não disponíveis.</p>
+  </ng-template>
 </div>
