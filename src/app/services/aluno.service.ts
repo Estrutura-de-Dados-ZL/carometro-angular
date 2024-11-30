@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { IAluno } from '../interfaces/aluno';
 import { IAlunoDetails } from '../interfaces/aluno-details';
+import { ApiRespostaDto } from '../interfaces/api-resposta-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,10 @@ export class AlunoService {
 
     if (filtros) {
       const queryString = Object.entries(filtros)
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+        )
         .join('&');
       url = `${url}?${queryString}`;
     }
@@ -39,53 +43,63 @@ export class AlunoService {
     );
   }
 
-  buscarAlunoPorEmail(email: string): Observable<IAlunoDetails | null> {
-    return this.http.get<IAlunoDetails>(`${this.apiUrl}/${email}`).pipe(
-      map((aluno) => aluno),
-      catchError((error) => {
-        if (error.status === 400 || error.status === 404) {
-          console.warn('Aluno não encontrado!');
-          return of(null);
-        }
-        return throwError(error);
-      })
-    );
+  buscarAlunoPorEmail(
+    email: string
+  ): Observable<ApiRespostaDto<IAlunoDetails> | null> {
+    return this.http
+      .get<ApiRespostaDto<IAlunoDetails>>(`${this.apiUrl}/${email}`)
+      .pipe(
+        map((aluno) => aluno),
+        catchError((error) => {
+          if (error.status === 400 || error.status === 404) {
+            console.warn('Aluno não encontrado!');
+            return of(null);
+          }
+          return throwError(error);
+        })
+      );
   }
 
   criarAluno(aluno: IAluno): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}`, aluno, {
-      headers: this.getAuthHeaders(),
-    }).pipe(
-      tap(() => console.log('Aluno criado com sucesso!')),
-      catchError((error) => {
-        console.error('Erro ao criar aluno:', error);
-        return throwError(error);
+    return this.http
+      .post<string>(`${this.apiUrl}`, aluno, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(
+        tap(() => console.log('Aluno criado com sucesso!')),
+        catchError((error) => {
+          console.error('Erro ao criar aluno:', error);
+          return throwError(error);
+        })
+      );
   }
 
   atualizarAluno(aluno: IAluno): Observable<any> {
-    return this.http.put(`${this.apiUrl}`, aluno, {
-      headers: this.getAuthHeaders(),
-    }).pipe(
-      tap(() => console.log('Aluno atualizado com sucesso!')),
-      catchError((error) => {
-        console.error('Erro ao atualizar aluno:', error);
-        return throwError(error);
+    return this.http
+      .put(`${this.apiUrl}`, aluno, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(
+        tap(() => console.log('Aluno atualizado com sucesso!')),
+        catchError((error) => {
+          console.error('Erro ao atualizar aluno:', error);
+          return throwError(error);
+        })
+      );
   }
 
   deletarAluno(email: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${email}`, {
-      headers: this.getAuthHeaders(),
-    }).pipe(
-      tap(() => console.log('Aluno excluído com sucesso!')),
-      catchError((error) => {
-        console.error('Erro ao excluir aluno:', error);
-        return throwError(error);
+    return this.http
+      .delete<string>(`${this.apiUrl}/${email}`, {
+        headers: this.getAuthHeaders(),
       })
-    );
+      .pipe(
+        tap(() => console.log('Aluno excluído com sucesso!')),
+        catchError((error) => {
+          console.error('Erro ao excluir aluno:', error);
+          return throwError(error);
+        })
+      );
   }
 
   verificarExistenciaAluno(email: string): Observable<boolean> {

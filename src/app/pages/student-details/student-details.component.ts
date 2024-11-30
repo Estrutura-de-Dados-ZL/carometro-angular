@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class StudentDetailsComponent implements OnInit {
   studentEmail!: string;
-  aluno!: IAlunoDetails | null;
+  aluno!: IAlunoDetails | null | undefined;
 
   constructor(private router: Router, private alunoService: AlunoService) {
     const navigation = this.router.getCurrentNavigation();
@@ -32,8 +32,8 @@ export class StudentDetailsComponent implements OnInit {
 
   loadAluno(): void {
     this.alunoService.buscarAlunoPorEmail(this.studentEmail).subscribe(
-      (aluno) => {
-        this.aluno = aluno;
+      (data) => {
+        this.aluno = data?.data;
       },
       (error) => {
         this.aluno = null;
