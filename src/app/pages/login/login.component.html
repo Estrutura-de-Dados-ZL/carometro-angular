@@ -1,2 +1,92 @@
 <app-navbar></app-navbar>
-<p>login works!</p>
+<h1 class="text-center">Entrar</h1>
+<form class="grid grid-cols-1 place-items-center" >
+    <mat-form-field class=" w-96 flex items-center justify-center" [floatLabel]="'always'" appearence="outline">
+      <mat-label>Email</mat-label>
+      <input  type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"
+             placeholder="Ex. pat@example.com">
+      @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+        <mat-error>Por favor, Insira um Email válido</mat-error>
+      }
+      @if (emailFormControl.hasError('required')) {
+        <mat-error>Insira um Email</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class=" w-96 flex items-center justify-center" appearence="outline">
+        <mat-label>Insira sua senha</mat-label>
+        <input matInput [formControl]="passwordFormControl"[type]="hide() ? 'password' : 'text'"  />
+        <button
+          class="bg-gray-400"
+          mat-icon-button
+          matSuffix
+          (click)="clickEvent($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()"
+        >
+          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    
+      <button class="bg-blue-400" mat-fab extended [disabled]="!passwordFormControl.valid || !emailFormControl.valid" disabledInteractive="true" matTooltip="Insira os dados para Login">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+  </form>
+<br>
+<div class="flex items-center justify-center gap-4">
+  <div class="h-px flex-1 bg-gradient-to-r from-gray-100 via-gray-400 to-black"></div>
+  <span class="text-gray-500 font-medium text-lg">Ou</span>
+  <div class="h-px flex-1 bg-gradient-to-r from-black via-gray-400 to-gray-100"></div>
+</div>
+<br>
+  <h1 class="text-center ">Cadastre-se</h1>
+  <form class="grid grid-cols-1 place-items-center" >
+    <mat-form-field class=" w-96 flex items-center justify-center" [floatLabel]="'always'" appearence="outline">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput [formControl]="emailFormControlSignIn" [errorStateMatcher]="matcher"
+             placeholder="Ex. pat@example.com">
+      @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+        <mat-error>Por favor, Insira um Email válido</mat-error>
+      }
+      @if (emailFormControl.hasError('required')) {
+        <mat-error>Insira um Email</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field class="w-96 flex items-center justify-center" appearence="outline">
+        <mat-label>Insira sua senha</mat-label>
+        <input matInput [formControl]="passwordFormControlSignIn"[type]="hideSignIn() ? 'password' : 'text'"  />
+        <button
+          class="bg-gray-400"
+          mat-icon-button
+          matSuffix
+          (click)="clickEventSignIn($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hideSignIn()"
+        >
+          <mat-icon>{{hideSignIn() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="w-96 flex items-center justify-center" appearence="outline">
+        <mat-label>Insira sua senha</mat-label>
+        <input matInput [formControl]="passwordFormControlSignIn"[type]="hideSignIn() ? 'password' : 'text'"  />
+        <button
+          class="bg-gray-400"
+          mat-icon-button
+          matSuffix
+          (click)="clickEventSignIn($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hideSignIn()"
+        >
+          <mat-icon>{{hideSignIn() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    
+      <button class="bg-blue-400" mat-fab extended [disabled]="!passwordFormControlSignIn.valid || !emailFormControlSignIn.valid" disabledInteractive="true" matTooltip="Insira os dados para Login">
+        <mat-icon>add_reaction</mat-icon>
+        Cadastre-se
+      </button>
+  </form>
+  
+ 
+  
+  
