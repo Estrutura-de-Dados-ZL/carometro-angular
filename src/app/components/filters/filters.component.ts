@@ -12,8 +12,8 @@ import { ICurso } from '../../interfaces/curso';
 export interface IFilter {
   ano?: number;
   semestre?: number;
-  curso?: number;
-  aluno?: string;
+  curso_id?: number;
+  nome?: string;
 }
 
 export interface ISemestre {
@@ -105,10 +105,10 @@ export class FiltersComponent implements OnInit {
       filtro.semestre = this.selectedSemestre;
     }
     if(this.selectedCurso) {
-      filtro.curso = this.selectedCurso;
+      filtro.curso_id = this.selectedCurso;
     }
     if(this.aluno) {
-      filtro.aluno = this.aluno;
+      filtro.nome = this.aluno;
     }
     this.enviarFiltro.emit(filtro);
   }

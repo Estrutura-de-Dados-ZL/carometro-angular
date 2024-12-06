@@ -36,7 +36,7 @@
       [value]="selectedCurso"
     >
       @for (curso of cursos; track curso) {
-      <mat-option [value]="curso.nome">{{ curso.nome }}</mat-option>
+      <mat-option [value]="curso.id">{{ curso.nome }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
