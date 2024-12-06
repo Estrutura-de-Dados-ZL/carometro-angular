@@ -113,4 +113,35 @@ export class AlunoService {
       })
     );
   }
+
+  atualizarAlunoPendente(email: string, pendente: boolean): Observable<any> {
+    return this.http
+      .patch(
+        `${this.apiUrl}/${email}`,
+        { pendente },
+        {
+          headers: this.getAuthHeaders(),
+        }
+      )
+      .pipe(
+        tap(() => console.log('Aluno pendente atualizado com sucesso!')),
+        catchError((error) => {
+          console.error('Erro ao atualizar flag pendente do aluno:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  getPendentes(): Observable<IAluno[]> {
+    return this.http
+      .get<IAluno[]>(`${this.apiUrl}/pendentes`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(
+        catchError((error) => {
+          console.error('Erro ao buscar alunos pendentes:', error);
+          return throwError(error);
+        })
+      );
+  }   
 }

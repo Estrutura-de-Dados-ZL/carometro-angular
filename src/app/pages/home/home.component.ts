@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { StudentCardComponent } from '../../components/student-card/student-card.component';
 import { CommonModule } from '@angular/common';
@@ -6,49 +6,9 @@ import {
   FiltersComponent,
   IFilter,
 } from '../../components/filters/filters.component';
-
-const studentsMock = [
-  {
-    nome: 'John Doe',
-    foto: 'https://i.pinimg.com/236x/19/bd/eb/19bdeb93ad73ce5ead4800d254c51008.jpg',
-    email: 'test1@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://img.freepik.com/fotos-gratis/feche-o-retrato-de-um-rosto-jovem-barbudo_171337-2887.jpg?semt=ais_hybrid',
-    email: 'test2@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://i.pinimg.com/236x/19/bd/eb/19bdeb93ad73ce5ead4800d254c51008.jpg',
-    email: 'test3@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://img.freepik.com/fotos-gratis/feche-o-retrato-de-um-rosto-jovem-barbudo_171337-2887.jpg?semt=ais_hybrid',
-    email: 'test4@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://i.pinimg.com/236x/19/bd/eb/19bdeb93ad73ce5ead4800d254c51008.jpg',
-    email: 'test5@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://img.freepik.com/fotos-gratis/feche-o-retrato-de-um-rosto-jovem-barbudo_171337-2887.jpg?semt=ais_hybrid',
-    email: 'test@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://i.pinimg.com/236x/19/bd/eb/19bdeb93ad73ce5ead4800d254c51008.jpg',
-    email: 'test@test.com',
-  },
-  {
-    nome: 'John Doe',
-    foto: 'https://img.freepik.com/fotos-gratis/feche-o-retrato-de-um-rosto-jovem-barbudo_171337-2887.jpg?semt=ais_hybrid',
-    email: 'test@test.com',
-  },
-];
+import { AlunoService } from '../../services/aluno.service';
+import { IAluno } from '../../interfaces/aluno';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
@@ -60,21 +20,84 @@ const studentsMock = [
     FiltersComponent,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['./home.component.css'],
 })
-export class HomeComponent {
-  students = studentsMock;
-  filtersVisible: boolean = false;
+export class HomeComponent implements OnInit {
+  students: IAluno[] = []; 
+  filtersVisible: boolean = false; 
+
+  constructor(private alunoService: AlunoService) {} 
+
+  ngOnInit(): void {
+    this.getAllAlunos();
+  }
 
   toggleFilters(): void {
     this.filtersVisible = !this.filtersVisible;
+
+    Swal.fire({
+      title: this.filtersVisible ? 'Filtros ativados!' : 'Filtros desativados!',
+      text: this.filtersVisible
+        ? 'Você pode aplicar filtros aos resultados.'
+        : 'Os filtros foram ocultados.',
+      icon: 'info',
+      confirmButtonText: 'Entendido',
+    });
   }
 
-  filtrar(filtros: IFilter) {
-    console.log(filtros);
+  filtrar(filtros: IFilter): void {
+    // Chamada ao serviço para listar alunos filtrados
+    this.alunoService.listarAlunos(filtros).subscribe({
+      next: (filteredStudents) => {
+        this.students = filteredStudents;
+
+        // SweetAlert para indicar sucesso
+        Swal.fire({
+          title: 'Filtros aplicados com sucesso!',
+          text: `Encontramos ${filteredStudents.length} aluno(s) com os critérios definidos.`,
+          icon: 'success',
+          confirmButtonText: 'Ok',
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao aplicar filtros:', error);
+
+        // SweetAlert para erros
+        Swal.fire({
+          title: 'Erro ao aplicar filtros',
+          text: 'Algo deu errado ao filtrar os alunos. Tente novamente.',
+          icon: 'error',
+          confirmButtonText: 'Ok',
+        });
+      },
+    });
   }
 
-  getAllAlunos() {
-    console.log('aaaaa');
+  getAllAlunos(): void {
+    // Chamada ao serviço para obter todos os alunos
+    this.alunoService.listarAlunos().subscribe({
+      next: (allStudents) => {
+        this.students = allStudents;
+
+        // SweetAlert para sucesso
+        Swal.fire({
+          title: 'Alunos carregados!',
+          text: `Encontramos ${allStudents.length} aluno(s) no total.`,
+          icon: 'success',
+          confirmButtonText: 'Ok',
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar alunos:', error);
+
+        // SweetAlert para erros
+        Swal.fire({
+          title: 'Erro ao carregar alunos',
+          text: 'Não foi possível carregar os dados dos alunos. Verifique sua conexão.',
+          icon: 'error',
+          confirmButtonText: 'Ok',
+        });
+      },
+    });
   }
 }
