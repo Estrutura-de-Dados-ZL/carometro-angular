@@ -10,10 +10,10 @@ import { CursoService } from '../../services/curso.service';
 import { ICurso } from '../../interfaces/curso'; 
 
 export interface IFilter {
-  ano: number;
-  semestre: number;
-  curso: number;
-  aluno: string;
+  ano?: number;
+  semestre?: number;
+  curso?: number;
+  aluno?: string;
 }
 
 export interface ISemestre {
@@ -97,13 +97,19 @@ export class FiltersComponent implements OnInit {
   }
 
   filtrar() {
-    const filtro: IFilter = {
-      ano: this.ano || 0,
-      aluno: this.aluno,
-      semestre: this.selectedSemestre,
-      curso: this.selectedCurso,
-    };
-
+    const filtro : IFilter = {};
+    if(this.ano){
+      filtro.ano = this.ano; 
+    }
+    if (this.selectedSemestre) {
+      filtro.semestre = this.selectedSemestre;
+    }
+    if(this.selectedCurso) {
+      filtro.curso = this.selectedCurso;
+    }
+    if(this.aluno) {
+      filtro.aluno = this.aluno;
+    }
     this.enviarFiltro.emit(filtro);
   }
 
