@@ -12,7 +12,7 @@ import { ICurso } from '../../interfaces/curso';
 export interface IFilter {
   ano?: number;
   semestre?: number;
-  curso_id?: number;
+  curso?: number;
   nome?: string;
 }
 
@@ -105,7 +105,7 @@ export class FiltersComponent implements OnInit {
       filtro.semestre = this.selectedSemestre;
     }
     if(this.selectedCurso) {
-      filtro.curso_id = this.selectedCurso;
+      filtro.curso = this.selectedCurso;
     }
     if(this.aluno) {
       filtro.nome = this.aluno;
